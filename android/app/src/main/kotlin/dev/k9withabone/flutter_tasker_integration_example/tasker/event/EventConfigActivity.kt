@@ -8,13 +8,15 @@ import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import dev.k9withabone.flutter_tasker_integration_example.tasker.action.TaskerActionConfigApi
 import io.flutter.embedding.android.FlutterActivity
 
-class EventHelper(config: TaskerPluginConfig<EventInput>) : TaskerPluginConfigHelper<EventInput, EventOutput, EventRunner>(config) {
+class EventHelper(config: TaskerPluginConfig<EventInput>) :
+    TaskerPluginConfigHelper<EventInput, EventOutput, EventRunner>(config) {
     override val runnerClass = EventRunner::class.java
     override val inputClass = EventInput::class.java
     override val outputClass = EventOutput::class.java
 }
 
-class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>, TaskerEventConfigApi {
+class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>,
+    TaskerEventConfigApi {
     private var time: String = ""
 
     private val eventHelper by lazy { EventHelper(this) }

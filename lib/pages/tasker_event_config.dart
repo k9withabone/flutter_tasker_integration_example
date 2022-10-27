@@ -19,34 +19,17 @@ class TaskerEventConfigPage extends StatefulWidget {
 class _TaskerEventConfigPageState extends State<TaskerEventConfigPage> {
   late final TaskerEventInput input;
 
-  TimeOfDay get inputTime {
-    if (input.time == null || input.time == '') {
-      return TimeOfDay.now();
-    }
-
-    final time = input.time!;
-    final hour = time.substring(0, 2);
-    final minute = time.substring(3);
-
-    return TimeOfDay(
-      hour: int.parse(hour),
-      minute: int.parse(minute),
-    );
-  }
-
-  set inputTime(TimeOfDay time) {
-    input.time = '${time.hour}:${time.minute}';
-  }
-
   @override
   void initState() {
     super.initState();
     input = widget.input;
+    if (input.time == null || input.time == '') {
+      input.time = TimeOfDay.now().to24();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentInputTime = inputTime;
     return WillPopScope(
       onWillPop: () async {
         TaskerEventConfigApi().configDone(input);
@@ -59,17 +42,16 @@ class _TaskerEventConfigPageState extends State<TaskerEventConfigPage> {
         body: ListView(
           children: [
             ListTile(
-              title: Text('Event Time: ${currentInputTime.hour}:'
-                  '${currentInputTime.minute}'),
+              title: Text('Event Time: ${input.time}'),
               trailing: ElevatedButton(
                 onPressed: () async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: currentInputTime,
+                    initialTime: _timeFrom24(input.time!),
                   );
                   if (time != null) {
                     setState(() {
-                      inputTime = time;
+                      input.time = time.to24();
                     });
                   }
                 },
@@ -80,5 +62,22 @@ class _TaskerEventConfigPageState extends State<TaskerEventConfigPage> {
         ),
       ),
     );
+  }
+
+  TimeOfDay _timeFrom24(String time) {
+    final hour = time.substring(0, 2);
+    final minute = time.substring(3);
+    return TimeOfDay(
+      hour: int.parse(hour),
+      minute: int.parse(minute),
+    );
+  }
+}
+
+extension _To24 on TimeOfDay {
+  String to24() {
+    final hour = this.hour.toString().padLeft(2, '0');
+    final minute = this.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 }
