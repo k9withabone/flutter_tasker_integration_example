@@ -17,7 +17,7 @@ class EventHelper(config: TaskerPluginConfig<EventInput>) :
 
 class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>,
     TaskerEventConfigApi {
-    private var time: String = ""
+    private var config: String = ""
 
     private val eventHelper by lazy { EventHelper(this) }
 
@@ -26,10 +26,10 @@ class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>,
         get() = super.getContext()
 
     override val inputForTasker: TaskerInput<EventInput>
-        get() = TaskerInput(EventInput(time))
+        get() = TaskerInput(EventInput(config))
 
     override fun assignFromInput(input: TaskerInput<EventInput>) {
-        time = input.regular.time
+        config = input.regular.config
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +40,10 @@ class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>,
 
     override fun getDartEntrypointFunctionName(): String = "taskerEventConfigMain"
 
-    override fun getDartEntrypointArgs(): MutableList<String> = mutableListOf(time)
+    override fun getDartEntrypointArgs(): MutableList<String> = mutableListOf(config)
 
     override fun configDone(input: TaskerEventInput, callback: (Boolean) -> Unit) {
-        time = input.time ?: ""
+        config = input.config ?: ""
         callback(true)
         eventHelper.finishForTasker()
     }

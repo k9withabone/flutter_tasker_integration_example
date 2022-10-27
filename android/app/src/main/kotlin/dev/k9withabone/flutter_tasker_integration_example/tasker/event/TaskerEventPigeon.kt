@@ -15,40 +15,40 @@ import java.nio.ByteBuffer
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TaskerEventInput (
-  val time: String? = null
+  val config: String? = null
 
 ) {
   companion object {
     @Suppress("UNCHECKED_CAST")
     fun fromMap(map: Map<String, Any?>): TaskerEventInput {
-      val time = map["time"] as? String
+      val config = map["config"] as? String
 
-      return TaskerEventInput(time)
+      return TaskerEventInput(config)
     }
   }
   fun toMap(): Map<String, Any?> {
     val map = mutableMapOf<String, Any?>()
-    time?.let { map["time"] = it }
+    config?.let { map["config"] = it }
     return map
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TaskerEventOutput (
-  val time: String? = null
+  val output: String? = null
 
 ) {
   companion object {
     @Suppress("UNCHECKED_CAST")
     fun fromMap(map: Map<String, Any?>): TaskerEventOutput {
-      val time = map["time"] as? String
+      val output = map["output"] as? String
 
-      return TaskerEventOutput(time)
+      return TaskerEventOutput(output)
     }
   }
   fun toMap(): Map<String, Any?> {
     val map = mutableMapOf<String, Any?>()
-    time?.let { map["time"] = it }
+    output?.let { map["output"] = it }
     return map
   }
 }

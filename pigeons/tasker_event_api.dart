@@ -3,7 +3,7 @@ import 'package:pigeon/pigeon.dart';
 // run ../pigeon.sh after modifying
 
 class TaskerEventInput {
-  String? time;
+  String? config;
 }
 
 @HostApi()
@@ -14,7 +14,7 @@ abstract class TaskerEventConfigApi {
 }
 
 class TaskerEventOutput {
-  String? time;
+  String? output;
 }
 
 @HostApi()

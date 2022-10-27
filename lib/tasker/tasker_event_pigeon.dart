@@ -9,42 +9,42 @@ import 'package:flutter/services.dart';
 
 class TaskerEventInput {
   TaskerEventInput({
-    this.time,
+    this.config,
   });
 
-  String? time;
+  String? config;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['time'] = time;
+    pigeonMap['config'] = config;
     return pigeonMap;
   }
 
   static TaskerEventInput decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return TaskerEventInput(
-      time: pigeonMap['time'] as String?,
+      config: pigeonMap['config'] as String?,
     );
   }
 }
 
 class TaskerEventOutput {
   TaskerEventOutput({
-    this.time,
+    this.output,
   });
 
-  String? time;
+  String? output;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['time'] = time;
+    pigeonMap['output'] = output;
     return pigeonMap;
   }
 
   static TaskerEventOutput decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return TaskerEventOutput(
-      time: pigeonMap['time'] as String?,
+      output: pigeonMap['output'] as String?,
     );
   }
 }

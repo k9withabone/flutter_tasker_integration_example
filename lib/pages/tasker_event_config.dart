@@ -18,66 +18,49 @@ class TaskerEventConfigPage extends StatefulWidget {
 
 class _TaskerEventConfigPageState extends State<TaskerEventConfigPage> {
   late final TaskerEventInput input;
+  late final TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
     input = widget.input;
-    if (input.time?.isEmpty ?? true) {
-      input.time = TimeOfDay.now().to24();
-    }
+    controller = TextEditingController(text: input.config);
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        TaskerEventConfigApi().configDone(input);
+        if (input.config?.isNotEmpty ?? false) {
+          await TaskerEventConfigApi().configDone(input);
+        }
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: ListView(
-          children: [
-            ListTile(
-              title: Text('Event Time: ${input.time}'),
-              trailing: ElevatedButton(
-                onPressed: () async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: _timeFrom24(input.time!),
-                  );
-                  if (time != null) {
-                    setState(() {
-                      input.time = time.to24();
-                    });
-                  }
-                },
-                child: const Text('Pick Event Time'),
-              ),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              labelText: 'Event Config',
             ),
-          ],
+            onChanged: (value) {
+              setState(() {
+                input.config = value;
+              });
+            },
+          ),
         ),
       ),
     );
   }
 
-  TimeOfDay _timeFrom24(String time) {
-    final hour = time.substring(0, 2);
-    final minute = time.substring(3);
-    return TimeOfDay(
-      hour: int.parse(hour),
-      minute: int.parse(minute),
-    );
-  }
-}
-
-extension _To24 on TimeOfDay {
-  String to24() {
-    final hour = this.hour.toString().padLeft(2, '0');
-    final minute = this.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 }

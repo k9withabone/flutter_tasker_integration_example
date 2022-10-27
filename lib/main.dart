@@ -43,7 +43,7 @@ void taskerActionRunMain(List<String> args) async {
 void taskerEventConfigMain(List<String> args) {
   const title = 'Tasker Event Config';
 
-  final input = TaskerEventInput(time: args[0]);
+  final input = TaskerEventInput(config: args[0]);
 
   runApp(App(
     title: title,

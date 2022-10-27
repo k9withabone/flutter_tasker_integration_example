@@ -7,8 +7,8 @@ import dev.k9withabone.flutter_tasker_integration_example.R
 @TaskerOutputObject()
 class EventOutput(
     @get:TaskerOutputVariable(
-        "time",
-        R.string.time,
-        R.string.time_description
-    ) val time: String
+        "output",
+        R.string.output,
+        R.string.output_description
+    ) val output: String
 )

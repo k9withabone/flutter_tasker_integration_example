@@ -2,7 +2,5 @@
 <resources>
     <string name="config">Config</string>
     <string name="output">Output</string>
-    <string name="output_description">Output of Tasker Action</string>
-    <string name="time">Event Time</string>
-    <string name="time_description">Time of Tasker Event</string>
+    <string name="output_description">Output of Tasker</string>
 </resources>
