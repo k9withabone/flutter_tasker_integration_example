@@ -9,16 +9,16 @@ import io.flutter.embedding.android.FlutterActivity
 
 class ActionHelper(config: TaskerPluginConfig<ActionInput>) :
     TaskerPluginConfigHelper<ActionInput, ActionOutput, ActionRunner>(config) {
-    override val runnerClass: Class<ActionRunner> get() = ActionRunner::class.java
-    override val inputClass: Class<ActionInput> get() = ActionInput::class.java
-    override val outputClass: Class<ActionOutput> = ActionOutput::class.java
+    override val runnerClass = ActionRunner::class.java
+    override val inputClass = ActionInput::class.java
+    override val outputClass = ActionOutput::class.java
 }
 
 class ActionConfigActivity : FlutterActivity(), TaskerPluginConfig<ActionInput>,
     TaskerActionConfigApi {
     private var config: String = ""
 
-    private val taskerHelper by lazy { ActionHelper(this) }
+    private val actionHelper by lazy { ActionHelper(this) }
 
     @Suppress("ACCIDENTAL_OVERRIDE")
     override val context: Context
@@ -34,7 +34,7 @@ class ActionConfigActivity : FlutterActivity(), TaskerPluginConfig<ActionInput>,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TaskerActionConfigApi.setUp(flutterEngine!!.dartExecutor.binaryMessenger, this)
-        taskerHelper.onCreate()
+        actionHelper.onCreate()
     }
 
     override fun getDartEntrypointFunctionName(): String = "taskerActionConfigMain"
@@ -44,7 +44,7 @@ class ActionConfigActivity : FlutterActivity(), TaskerPluginConfig<ActionInput>,
     override fun configDone(input: TaskerActionInput, callback: (Boolean) -> Unit) {
         config = input.config ?: ""
         callback(true)
-        taskerHelper.finishForTasker()
+        actionHelper.finishForTasker()
     }
 
     override fun onDestroy() {

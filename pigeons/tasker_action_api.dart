@@ -1,6 +1,6 @@
-// run ../pigeon.sh after modifying
-
 import 'package:pigeon/pigeon.dart';
+
+// run ../pigeon.sh after modifying
 
 class TaskerActionInput {
   String? config;
@@ -19,7 +19,7 @@ class TaskerActionOutput {
 
 @HostApi()
 abstract class TaskerActionRunApi {
-  // call when flutter runner is complete
+  // call when runner is complete
   @async
   bool runDone(TaskerActionOutput output);
 }
