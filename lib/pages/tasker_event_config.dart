@@ -23,7 +23,7 @@ class _TaskerEventConfigPageState extends State<TaskerEventConfigPage> {
   void initState() {
     super.initState();
     input = widget.input;
-    if (input.time == null || input.time == '') {
+    if (input.time?.isEmpty ?? true) {
       input.time = TimeOfDay.now().to24();
     }
   }
