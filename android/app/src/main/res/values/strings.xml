@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="config">Config</string>
+    <string name="output">Output</string>
+    <string name="output_description">Output of Tasker Action</string>
+</resources>
