@@ -13,7 +13,7 @@ void main() {
 }
 
 @pragma('vm:entry-point')
-taskerActionConfigMain(List<String> args) {
+void taskerActionConfigMain(List<String> args) {
   const title = 'Tasker Action Config';
 
   final input = TaskerActionInput(config: args[0]);
@@ -25,6 +25,16 @@ taskerActionConfigMain(List<String> args) {
       input: input,
     ),
   ));
+}
+
+@pragma('vm:entry-point')
+void taskerActionRunMain(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final input = TaskerActionInput(config: args[0]);
+
+  // do action tasks here
+
+  await TaskerActionRunApi().runDone(TaskerActionOutput(config: input.config));
 }
 
 class App extends StatelessWidget {
