@@ -31,7 +31,7 @@ class _TaskerActionConfigPageState extends State<TaskerActionConfigPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (input.config != null && input.config != '') {
+        if (input.config?.isNotEmpty ?? false) {
           await TaskerActionConfigApi().configDone(input);
         }
         return true;
