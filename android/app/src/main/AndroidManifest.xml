@@ -46,7 +46,7 @@
            android:name=".tasker.event.EventConfigActivity"
            android:exported="true"
            android:icon="@mipmap/ic_launcher"
-           android:label="Tasker Action"
+           android:label="Tasker Event"
            android:launchMode="singleTop"
            android:theme="@style/LaunchTheme"
            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -54,6 +54,21 @@
            android:windowSoftInputMode="adjustResize">
            <intent-filter>
                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+           </intent-filter>
+       </activity>
+       <!-- tasker state -->
+       <activity
+           android:name=".tasker.state.StateConfigActivity"
+           android:exported="true"
+           android:icon="@mipmap/ic_launcher"
+           android:label="Tasker State"
+           android:launchMode="singleTop"
+           android:theme="@style/LaunchTheme"
+           android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+           android:hardwareAccelerated="true"
+           android:windowSoftInputMode="adjustResize">
+           <intent-filter>
+               <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
            </intent-filter>
        </activity>
         <!-- Don't delete the meta-data below.

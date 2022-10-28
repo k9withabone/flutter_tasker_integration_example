@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/tasker_action_config.dart';
 import 'pages/tasker_event_config.dart';
+import 'pages/tasker_state_config.dart';
 import 'tasker/tasker_action_pigeon.dart';
 import 'tasker/tasker_event_pigeon.dart';
+import 'tasker/tasker_state_pigeon.dart';
 
 void main() {
   const title = 'Flutter Tasker Integration Example';
@@ -67,6 +69,37 @@ void taskerEventRunMain(List<String> args) async {
         'Update: ${update.update}',
   );
   await TaskerEventRunApi().runDone(output);
+}
+
+@pragma('vm:entry-point')
+void taskerStateConfigMain(List<String> args) {
+  const title = 'Tasker State Config';
+
+  final input = TaskerStateInput(config: args[0]);
+
+  runApp(App(
+    title: title,
+    child: TaskerStateConfigPage(
+      title: title,
+      input: input,
+    ),
+  ));
+}
+
+@pragma('vm:entry-point')
+void taskerStateRunMain(List<String> args) async {
+  print('Starting taskerStateRunMain');
+  WidgetsFlutterBinding.ensureInitialized();
+  final input = TaskerStateInput(config: args[0]);
+  final isOn = args[1] == 'true';
+
+  // do state tasks here
+
+  final output = TaskerStateOutput(
+    output: 'Config: ${input.config}\n'
+        'isOn: $isOn',
+  );
+  await TaskerStateRunApi().runDone(output);
 }
 
 class App extends StatelessWidget {

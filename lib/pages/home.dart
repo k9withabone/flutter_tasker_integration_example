@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tasker_integration_example/tasker/tasker_event_pigeon.dart';
+
+import '../tasker/tasker_event_pigeon.dart';
+import '../tasker/tasker_state_pigeon.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -46,6 +48,17 @@ class _HomePageState extends State<HomePage> {
                 ));
               },
               child: const Text('Trigger Tasker Event'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                await TaskerStateUpdateApi()
+                    .setState(TaskerStateCondition.toggle);
+                scaffoldMessenger.showSnackBar(const SnackBar(
+                  content: Text('Toggled Tasker State!'),
+                ));
+              },
+              child: const Text('Toggle Tasker State'),
             ),
           ],
         ),
