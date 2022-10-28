@@ -54,6 +54,21 @@ void taskerEventConfigMain(List<String> args) {
   ));
 }
 
+@pragma('vm:entry-point')
+void taskerEventRunMain(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final input = TaskerEventInput(config: args[0]);
+  final update = TaskerEventUpdate(update: args[1]);
+
+  // do event tasks here
+
+  final output = TaskerEventOutput(
+    output: 'Config: ${input.config}\n'
+        'Update: ${update.update}',
+  );
+  await TaskerEventRunApi().runDone(output);
+}
+
 class App extends StatelessWidget {
   final String title;
   final Widget child;

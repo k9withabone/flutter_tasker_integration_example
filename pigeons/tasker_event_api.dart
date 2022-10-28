@@ -13,6 +13,17 @@ abstract class TaskerEventConfigApi {
   bool configDone(TaskerEventInput input);
 }
 
+class TaskerEventUpdate {
+  String? update;
+}
+
+@HostApi()
+abstract class TaskerEventTriggerApi {
+  // call to trigger event
+  @async
+  bool triggerEvent(TaskerEventUpdate update);
+}
+
 class TaskerEventOutput {
   String? output;
 }

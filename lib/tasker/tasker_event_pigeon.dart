@@ -28,6 +28,27 @@ class TaskerEventInput {
   }
 }
 
+class TaskerEventUpdate {
+  TaskerEventUpdate({
+    this.update,
+  });
+
+  String? update;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['update'] = update;
+    return pigeonMap;
+  }
+
+  static TaskerEventUpdate decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return TaskerEventUpdate(
+      update: pigeonMap['update'] as String?,
+    );
+  }
+}
+
 class TaskerEventOutput {
   TaskerEventOutput({
     this.output,
@@ -88,6 +109,68 @@ class TaskerEventConfigApi {
         'dev.flutter.pigeon.TaskerEventConfigApi.configDone', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_input]) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else if (replyMap['result'] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyMap['result'] as bool?)!;
+    }
+  }
+}
+
+class _TaskerEventTriggerApiCodec extends StandardMessageCodec{
+  const _TaskerEventTriggerApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is TaskerEventUpdate) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else 
+{
+      super.writeValue(buffer, value);
+    }
+  }
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:       
+        return TaskerEventUpdate.decode(readValue(buffer)!);
+      
+      default:      
+        return super.readValueOfType(type, buffer);
+      
+    }
+  }
+}
+
+class TaskerEventTriggerApi {
+  /// Constructor for [TaskerEventTriggerApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  TaskerEventTriggerApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec = _TaskerEventTriggerApiCodec();
+
+  Future<bool> triggerEvent(TaskerEventUpdate arg_update) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.TaskerEventTriggerApi.triggerEvent', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object?>[arg_update]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',

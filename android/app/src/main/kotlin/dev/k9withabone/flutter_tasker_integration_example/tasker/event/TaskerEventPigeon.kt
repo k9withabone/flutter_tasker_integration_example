@@ -34,6 +34,26 @@ data class TaskerEventInput (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class TaskerEventUpdate (
+  val update: String? = null
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromMap(map: Map<String, Any?>): TaskerEventUpdate {
+      val update = map["update"] as? String
+
+      return TaskerEventUpdate(update)
+    }
+  }
+  fun toMap(): Map<String, Any?> {
+    val map = mutableMapOf<String, Any?>()
+    update?.let { map["update"] = it }
+    return map
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class TaskerEventOutput (
   val output: String? = null
 
@@ -97,6 +117,64 @@ interface TaskerEventConfigApi {
               val args = message as List<Any?>
               val inputArg = args[0] as TaskerEventInput
               api.configDone(inputArg) {
+                reply.reply(wrapResult(it))
+              }
+            } catch (exception: Error) {
+              wrapped["error"] = wrapError(exception)
+              reply.reply(wrapped)
+            
+          }
+        }} else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+@Suppress("UNCHECKED_CAST")
+private object TaskerEventTriggerApiCodec : StandardMessageCodec() {
+  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
+    return when (type) {
+      128.toByte() -> {
+        return (readValue(buffer) as? Map<String, Any?>)?.let {
+          TaskerEventUpdate.fromMap(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
+  }
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+    when (value) {
+      is TaskerEventUpdate -> {
+        stream.write(128)
+        writeValue(stream, value.toMap())
+      }
+      else -> super.writeValue(stream, value)
+    }
+  }
+}
+
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface TaskerEventTriggerApi {
+  fun triggerEvent(update: TaskerEventUpdate, callback: (Boolean) -> Unit)
+
+  companion object {
+    /** The codec used by TaskerEventTriggerApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      TaskerEventTriggerApiCodec
+    }
+    /** Sets up an instance of `TaskerEventTriggerApi` to handle messages through the `binaryMessenger`. */
+    @Suppress("UNCHECKED_CAST")
+    fun setUp(binaryMessenger: BinaryMessenger, api: TaskerEventTriggerApi?) {
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.TaskerEventTriggerApi.triggerEvent", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val wrapped = hashMapOf<String, Any?>()
+            try {
+              val args = message as List<Any?>
+              val updateArg = args[0] as TaskerEventUpdate
+              api.triggerEvent(updateArg) {
                 reply.reply(wrapResult(it))
               }
             } catch (exception: Error) {
