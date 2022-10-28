@@ -46,64 +46,38 @@ class StateRunner : TaskerPluginRunnerConditionState<StateInput, StateOutput>() 
         val flutterDoneCompletable = CompletableDeferred<TaskerStateOutput>()
 
         override fun runDone(output: TaskerStateOutput, callback: (Boolean) -> Unit) {
+            Log.d("tasker", "runDone")
             callback(true)
             flutterDoneCompletable.complete(output)
+            Log.d("tasker", "flutterDoneCompletable completed")
         }
     }
-
-    private var resultCompletable = CompletableDeferred<StateOutput>()
 
     override fun getSatisfiedCondition(
         context: Context,
         input: TaskerInput<StateInput>,
         update: Unit?
-    ): TaskerPluginResultCondition<StateOutput> {
-//        var looper = Looper.myLooper()
-//        if (looper == null) {
-//            Looper.prepare()
-//            looper = Looper.myLooper()
-//        }
-        val runnerHandler = HandlerCompat.createAsync(Looper.myLooper()!!)
+    ): TaskerPluginResultCondition<StateOutput> = runBlocking {
+        Log.d("tasker", "starting engine set up")
+        val stateRunApi = StateRunApi()
+        val engine = FlutterEngine(context)
+        val dartBundlePath = FlutterInjector.instance().flutterLoader().findAppBundlePath()
+        val entrypoint = DartExecutor.DartEntrypoint(dartBundlePath, "taskerStateRunMain")
 
-        val posted = HandlerCompat.createAsync(Looper.getMainLooper()).postAtFrontOfQueue {
-            Log.d("tasker", "starting engine set up on main")
-            val stateRunApi = StateRunApi()
-            val engine = FlutterEngine(context)
-            val dartBundlePath = FlutterInjector.instance().flutterLoader().findAppBundlePath()
-            val entrypoint = DartExecutor.DartEntrypoint(dartBundlePath, "taskerStateRunMain")
+        TaskerStateRunApi.setUp(engine.dartExecutor.binaryMessenger, stateRunApi)
+        Log.d("tasker", "executing dart")
+        engine.dartExecutor.executeDartEntrypoint(
+            entrypoint,
+            listOf(input.regular.config, isOn.toString())
+        )
 
-            TaskerStateRunApi.setUp(engine.dartExecutor.binaryMessenger, stateRunApi)
-            Log.d("tasker", "executing dart")
-            engine.dartExecutor.executeDartEntrypoint(
-                entrypoint,
-                listOf(input.regular.config, isOn.toString())
-            )
-
-            var runResult: TaskerStateOutput? = null
-            Log.d("tasker", "launching wait for result")
-            MainScope().launch {
-                runResult = stateRunApi.flutterDoneCompletable.await()
-            }.invokeOnCompletion {
-                engine.destroy()
-                runnerHandler.post {
-                    resultCompletable.complete(StateOutput(runResult?.output ?: ""))
-                    Log.d("tasker", "result completed")
-//                    runnerHandler.looper.quit()
-                }
-            }
-        }
-        Log.d("tasker", "Posted: $posted")
-
-//        Looper.loop()
-        val result: StateOutput
-        Log.d("tasker", "runBlocking")
-        runBlocking {
-            result = resultCompletable.await()
-        }
-        Log.d("tasker", "runBlocking done")
+        Log.d("tasker", "awaiting result")
+        val runResult = stateRunApi.flutterDoneCompletable.await()
+        Log.d("tasker", "result received")
+        val result = StateOutput(runResult.output ?: "")
         if (isOn) {
-            return TaskerPluginResultConditionSatisfied(context, result)
+            return@runBlocking TaskerPluginResultConditionSatisfied(context, result)
         }
-        return TaskerPluginResultConditionUnsatisfied()
+        return@runBlocking TaskerPluginResultConditionUnsatisfied()
     }
 }

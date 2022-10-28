@@ -99,7 +99,9 @@ void taskerStateRunMain(List<String> args) async {
     output: 'Config: ${input.config}\n'
         'isOn: $isOn',
   );
+  print('sending output');
   await TaskerStateRunApi().runDone(output);
+  print('Finished taskerStateRunMain');
 }
 
 class App extends StatelessWidget {
