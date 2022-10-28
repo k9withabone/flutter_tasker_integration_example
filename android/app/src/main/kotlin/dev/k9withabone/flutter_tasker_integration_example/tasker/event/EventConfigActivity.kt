@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfigHelper
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
-import dev.k9withabone.flutter_tasker_integration_example.tasker.action.TaskerActionConfigApi
 import io.flutter.embedding.android.FlutterActivity
 
 class EventHelper(config: TaskerPluginConfig<EventInput>) :
@@ -49,7 +48,7 @@ class EventConfigActivity : FlutterActivity(), TaskerPluginConfig<EventInput>,
     }
 
     override fun onDestroy() {
-        TaskerActionConfigApi.setUp(flutterEngine!!.dartExecutor.binaryMessenger, null)
+        TaskerEventConfigApi.setUp(flutterEngine!!.dartExecutor.binaryMessenger, null)
         super.onDestroy()
     }
 }

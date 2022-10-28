@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tasker_integration_example/tasker/tasker_event_pigeon.dart';
+
+import '../tasker/tasker_event_pigeon.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
